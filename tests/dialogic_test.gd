@@ -3,7 +3,7 @@ extends Node
 ## 之後做好 story_player（播放場景）就會刪掉。
 
 ## 要播放的時間軸檔案，可以在檢查器裡換
-@export_file("*.dtl") var timeline_path: String = "res://example/format_sample/format_sample.dtl"
+@export_file("*.dtl") var timeline_path: String = "res://tests/format_sample/format_sample.dtl"
 
 
 func _ready() -> void:

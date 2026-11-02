@@ -22,12 +22,11 @@ Dialogic="*uid://ds2q0uclmolvu"
 [dialogic]
 
 directories/dch_directory={
-"amy": "res://example/format_sample/amy.dch",
-"jane": "res://example/format_sample/jane.dch"
+"test_jane": "res://tests/format_sample/test_jane.dch"
 }
 directories/dtl_directory={
-"format_sample": "res://example/format_sample/format_sample.dtl",
-"test_timeline": "res://example/test_timeline.dtl"
+"format_sample": "res://tests/format_sample/format_sample.dtl",
+"test_timeline": "res://tests/test_timeline.dtl"
 }
 layout/style_directory={}
 variables={
