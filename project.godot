@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Visual Novel Template"
+run/main_scene="uid://dklqhr42isa6g"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -20,11 +21,18 @@ Dialogic="*uid://ds2q0uclmolvu"
 
 [dialogic]
 
-directories/dch_directory={}
+directories/dch_directory={
+"amy": "res://example/format_sample/amy.dch",
+"jane": "res://example/format_sample/jane.dch"
+}
 directories/dtl_directory={
+"format_sample": "res://example/format_sample/format_sample.dtl",
 "test_timeline": "res://example/test_timeline.dtl"
 }
 layout/style_directory={}
+variables={
+"affection": 0
+}
 
 [display]
 
