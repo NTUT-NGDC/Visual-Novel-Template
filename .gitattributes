@@ -1,0 +1,2 @@
+# 文字檔一律用 LF 換行，避免 Windows／Mac 互相改來改去
+* text=auto eol=lf

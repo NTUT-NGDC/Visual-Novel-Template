@@ -1,0 +1,14 @@
+# Godot 自動產生的快取（每台電腦打開專案時會自己重建，不用上傳）
+.godot/
+/android/
+
+# 匯出的遊戲檔（Web 版請匯出到 build/ 資料夾，再另外上傳到 itch.io）
+build/
+
+# 作業系統自動產生的檔案
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 個人編輯器設定
+.vscode/
