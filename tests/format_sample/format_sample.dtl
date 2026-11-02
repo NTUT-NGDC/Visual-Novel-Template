@@ -1,4 +1,4 @@
-[background arg="res://example/images/bg_room.png" fade="0.0"]
+[background arg="res://example/images/bg_classroom.png" fade="0.0"]
 這是一句旁白。
 join test_jane (開心) center
 test_jane: 你好，我是小珍。
@@ -6,7 +6,7 @@ update test_jane (生氣)
 test_jane: 我現在有點生氣。
 - 安慰她
 	test_jane: 謝謝你。
-	set {affection} += 1
+	set {好感度} += 1
 	jump 匯流
 - 不理她
 	test_jane: 哼。
@@ -14,7 +14,7 @@ test_jane: 我現在有點生氣。
 label 匯流
 test_jane: 不管怎樣，故事繼續。
 [signal arg="change_background"]
-if {affection} > 0:
+if {好感度} > 0:
 	test_jane (開心): 這是好結局。
 else:
 	test_jane (難過): 這是普通結局。

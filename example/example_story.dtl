@@ -1,0 +1,33 @@
+[background arg="res://example/images/bg_classroom.png" fade="0.0"]
+期末考前一天，放學後的教室。
+join jane (難過) left
+jane: 怎麼辦……我的筆記本不見了。
+jane: 明天就要考試了，裡面有我整理好的所有重點。
+join antonio (開心) right
+antonio: 喔？資優生也會弄丟東西啊。
+antonio: 沒有筆記，明天就跟我一樣靠實力囉。
+update jane (生氣)
+jane: 阿東你很吵耶！
+小珍看起來快哭了。你決定……
+- 幫小珍一起找
+	jane (開心): 真的嗎？謝謝你！
+	set {好感度} += 1
+	jump 找到筆記本
+- 跟阿東一起笑她
+	antonio (開心): 哈哈，對吧！你也這麼覺得。
+	jane (生氣): ……你們兩個都很過分。
+	jump 找到筆記本
+label 找到筆記本
+你在講台底下發現了一本筆記本，封面寫著「小珍」。
+jane (生氣): 為什麼會在這裡？阿東！
+antonio (難過): 呃……我只是想開個玩笑而已……對不起啦！
+leave antonio
+if {好感度} >= 1:
+	jane (開心): 謝謝你陪我找。要不要……明天考前一起複習？
+	你們一起讀到很晚。這大概是期末考週最棒的一天。
+else:
+	[background arg="res://example/images/bg_classroom_dusk.png" fade="1.0"]
+	jane (難過): ……我先回家了。
+	leave jane
+	夕陽照進教室，只剩下你一個人。
+leave --All--

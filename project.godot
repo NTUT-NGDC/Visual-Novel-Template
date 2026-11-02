@@ -22,15 +22,19 @@ Dialogic="*uid://ds2q0uclmolvu"
 [dialogic]
 
 directories/dch_directory={
+"antonio": "res://example/characters/antonio.dch",
+"jane": "res://example/characters/jane.dch",
 "test_jane": "res://tests/format_sample/test_jane.dch"
 }
 directories/dtl_directory={
+"example_story": "res://example/example_story.dtl",
 "format_sample": "res://tests/format_sample/format_sample.dtl",
+"signal_challenge": "res://example/signal_challenge/signal_challenge.dtl",
 "test_timeline": "res://tests/test_timeline.dtl"
 }
 layout/style_directory={}
 variables={
-"affection": 0
+"好感度": 0
 }
 
 [display]

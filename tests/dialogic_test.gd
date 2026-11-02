@@ -3,7 +3,7 @@ extends Node
 ## 之後做好 story_player（播放場景）就會刪掉。
 
 ## 要播放的時間軸檔案，可以在檢查器裡換
-@export_file("*.dtl") var timeline_path: String = "res://tests/format_sample/format_sample.dtl"
+@export_file("*.dtl") var timeline_path: String = "res://example/example_story.dtl"
 
 
 func _ready() -> void:
@@ -19,4 +19,4 @@ func _on_signal_event(argument: Variant) -> void:
 
 
 func _on_timeline_ended() -> void:
-	print("[測試] 時間軸播放結束，affection = ", Dialogic.VAR.get_variable("affection"))
+	print("[測試] 時間軸播放結束，好感度 = ", Dialogic.VAR.get_variable("好感度"))

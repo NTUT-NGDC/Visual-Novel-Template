@@ -1,0 +1,11 @@
+[background arg="res://example/images/bg_classroom.png" fade="0.0"]
+join antonio (開心) center
+antonio: 嘿，跟你說一個秘密。
+antonio: 時間軸其實可以「遙控」遊戲畫面喔。看好了——
+[signal arg="flash_red"]
+antonio (生氣): 看到了嗎！畫面剛剛閃了一下紅色！
+antonio: 再來一次，這次換白色——
+[signal arg="flash_white"]
+antonio (開心): 這是時間軸裡的 Signal 事件，被場景裡的程式接到才發生的。
+antonio: 打開 signal_challenge.gd 看看是怎麼做到的吧。
+leave antonio
