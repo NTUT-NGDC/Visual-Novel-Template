@@ -3,7 +3,7 @@ extends Node
 ##
 ## 想播自己的故事：點選場景最上層的 StoryPlayer 節點，
 ## 在右邊的檢查器把「Timeline Path」改成自己的時間軸（.dtl）。
-## 匯出 Web 版時，要把這個場景設成主場景。
+## 這個場景用來快速播一條時間軸；正式的遊戲請照教學文件第 5 章做故事場景。
 
 ## 要播放的時間軸。預設是 my_story 資料夾裡的 my_story.dtl
 @export_file("*.dtl") var timeline_path: String = "res://my_story/timelines/my_story.dtl"
