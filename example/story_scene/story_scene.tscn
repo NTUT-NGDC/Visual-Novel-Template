@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://example/story_scene/story_scene.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://pause_menu/pause_menu.tscn" id="2_pause"]
+[ext_resource type="PackedScene" path="res://game/pause_menu/pause_menu.tscn" id="2_pause"]
 
 [node name="StoryScene" type="Node"]
 script = ExtResource("1_script")

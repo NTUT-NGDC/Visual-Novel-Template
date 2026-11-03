@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Visual Novel Template"
-run/main_scene="res://title_screen/title_screen.tscn"
+run/main_scene="res://game/title_screen/title_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Dialogic="*uid://ds2q0uclmolvu"
-SoundSettings="*res://settings/scripts/sound_settings.gd"
+SoundSettings="*res://game/sound_settings/scripts/sound_settings.gd"
 
 [dialogic]
 
@@ -41,14 +41,14 @@ directories/dch_directory={
 "antonio": "res://example/characters/antonio.dch",
 "character": "res://my_story/character.dch",
 "jane": "res://example/characters/jane.dch",
-"test_jane": "res://tests/format_sample/test_jane.dch"
+"test_jane": "res://_system/tests/format_sample/test_jane.dch"
 }
 directories/dtl_directory={
 "example_story": "res://example/timelines/example_story.dtl",
-"format_sample": "res://tests/format_sample/format_sample.dtl",
+"format_sample": "res://_system/tests/format_sample/format_sample.dtl",
 "my_story": "res://my_story/timelines/my_story.dtl",
 "signal_challenge": "res://example/signal_challenge/signal_challenge.dtl",
-"test_timeline": "res://tests/timelines/test_timeline.dtl"
+"test_timeline": "res://_system/tests/timelines/test_timeline.dtl"
 }
 layout/style_directory={}
 variables={
@@ -67,7 +67,7 @@ enabled=PackedStringArray("res://addons/dialogic/plugin.cfg")
 
 [gui]
 
-theme/custom_font="res://fonts/Cubic_11.woff2"
+theme/custom_font="res://_system/fonts/Cubic_11.woff2"
 
 [input]
 

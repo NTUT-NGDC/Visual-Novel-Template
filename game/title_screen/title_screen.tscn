@@ -1,0 +1,200 @@
+[gd_scene format=3 uid="uid://cq8fwr2wble45"]
+
+[ext_resource type="Script" uid="uid://cpbkpbvtdla2g" path="res://game/title_screen/scripts/title_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://s53eqdo2gddn" path="res://game/sound_settings/scripts/volume_slider.gd" id="2_slider"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 44.0
+content_margin_top = 33.0
+content_margin_right = 44.0
+content_margin_bottom = 33.0
+bg_color = Color(0.13, 0.13, 0.17, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="TitleScreen" type="Control" unique_id=450690006]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="BackgroundColor" type="ColorRect" parent="." unique_id=2033522653]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13, 0.13, 0.17, 1)
+
+[node name="BackgroundImage" type="TextureRect" parent="." unique_id=1393897445]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1699202478]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 44
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_bottom = 44
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1682901673]
+layout_mode = 2
+theme_override_constants/separation = 33
+alignment = 1
+
+[node name="GameName" type="Label" parent="Margin/VBox" unique_id=1606701254]
+layout_mode = 2
+theme_override_font_sizes/font_size = 66
+text = "我的視覺小說"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Buttons" type="VBoxContainer" parent="Margin/VBox" unique_id=1742977126]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 11
+
+[node name="StartButton" type="Button" parent="Margin/VBox/Buttons" unique_id=1663377511]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 33
+text = "開始遊戲"
+
+[node name="SettingsButton" type="Button" parent="Margin/VBox/Buttons" unique_id=17960522]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 33
+text = "設定"
+
+[node name="QuitButton" type="Button" parent="Margin/VBox/Buttons" unique_id=1293975185]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 33
+text = "離開遊戲"
+
+[node name="Hook" type="Label" parent="Margin/VBox" unique_id=1499666149]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "作者：（你的名字）"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MessageLabel" type="Label" parent="Margin/VBox" unique_id=295265639]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.4, 1)
+theme_override_font_sizes/font_size = 22
+text = "（提示文字）"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SettingsPanel" type="Control" parent="." unique_id=1524518118]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="SettingsPanel" unique_id=152865231]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="Center" type="CenterContainer" parent="SettingsPanel" unique_id=162321016]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="SettingsPanel/Center" unique_id=1513401777]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel/Center/Panel" unique_id=133829036]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/Center/Panel/VBox" unique_id=41174170]
+layout_mode = 2
+theme_override_font_sizes/font_size = 33
+text = "設定"
+horizontal_alignment = 1
+
+[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/Center/Panel/VBox" unique_id=359333879]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="MusicLabel" type="Label" parent="SettingsPanel/Center/Panel/VBox/MusicRow" unique_id=1454032158]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "音樂"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsPanel/Center/Panel/VBox/MusicRow" unique_id=157470380]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(264, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("2_slider")
+
+[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/Center/Panel/VBox" unique_id=339030545]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="SfxLabel" type="Label" parent="SettingsPanel/Center/Panel/VBox/SfxRow" unique_id=731347486]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "音效"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsPanel/Center/Panel/VBox/SfxRow" unique_id=104518139]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(264, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("2_slider")
+bus_name = "SFX"
+
+[node name="BackButton" type="Button" parent="SettingsPanel/Center/Panel/VBox" unique_id=86460697]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "返回"
