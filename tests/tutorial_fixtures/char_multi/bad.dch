@@ -1,0 +1,17 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"display_name": "壞壞",
+&"nicknames": [""],
+&"portraits": {
+"開心": {
+"export_overrides": {
+"image": "\"res://example/images/jane_happy.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+}
+}
+}

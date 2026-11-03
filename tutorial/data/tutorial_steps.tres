@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="TutorialSteps" format=3 uid="uid://lj2hs5c7pk85"]
+
+[ext_resource type="Script" uid="uid://d2bx5gbph22p" path="res://tutorial/scripts/tutorial_step.gd" id="1_step"]
+[ext_resource type="Script" uid="uid://dmm545o1whjhm" path="res://tutorial/scripts/tutorial_steps.gd" id="2_steps"]
+
+[sub_resource type="Resource" id="Step_1"]
+script = ExtResource("1_step")
+title = "1. 建立角色"
+description = "在 my_story 資料夾建立一個角色，設定名字，加上至少 2 張立繪（例如開心、生氣）。"
+hint = "Godot 上方切到「Dialogic」→ 左邊清單上方的「New Character」圖示按鈕（滑鼠移上去會顯示名字），存到 my_story/characters。
+名字填在 Display Name。立繪用 Portraits 旁邊的「Import Images as Portraits」一次選好幾張圖片最快；用「Add Empty Portrait」新增的話，每張都要再選圖片。"
+
+[sub_resource type="Resource" id="Step_2"]
+script = ExtResource("1_step")
+title = "2. 建立時間軸"
+description = "在 my_story 資料夾建立一條時間軸，寫至少 3 句台詞。"
+hint = "左邊清單上方的「New Timeline」圖示按鈕，存到 my_story/timelines，檔名取 my_story（播放場景預設播這個檔名）。
+加入 Text 事件就是一句台詞，Character 欄位選角色就是那個角色說的話，空著就是旁白。
+寫完記得按 Ctrl+S 存檔。"
+
+[sub_resource type="Resource" id="Step_3"]
+script = ExtResource("1_step")
+title = "3. 角色登場、換表情"
+description = "讓角色登場，在故事中間換一次立繪（表情）。"
+hint = "加入 Character 事件，選 Join、選角色和立繪，角色就會出現在畫面上。
+換表情：再加一個 Character 事件選 Update 並選另一張立繪；或是在 Text 事件選角色時，順便選一張立繪。"
+
+[sub_resource type="Resource" id="Step_4"]
+script = ExtResource("1_step")
+title = "4. 加入選項"
+description = "讓玩家做一個選擇，至少有兩個選項，每個選項底下接不同的台詞。"
+hint = "加入 Choice 事件，填上選項文字，再加一個 Choice 事件緊接在它後面，兩個就是同一組。
+把台詞拖進選項底下（往右縮排一格），就是選了這個選項才會播的內容。"
+
+[sub_resource type="Resource" id="Step_5"]
+script = ExtResource("1_step")
+title = "5. 分支匯流"
+description = "兩個選項播完各自的內容後，都跳回同一個地方，繼續主線劇情。"
+hint = "在選項後面的主線開頭加一個 Label 事件，取個名字（例如「匯流」）。
+在每個選項的最後加一個 Jump 事件，選剛剛的 Label。"
+
+[sub_resource type="Resource" id="Step_6"]
+script = ExtResource("1_step")
+title = "6. 播放成功"
+description = "實際播放你的時間軸，從頭播到結尾。"
+hint = "在上方選擇你的時間軸，按「試玩」。中途按「結束試玩」不算，要播到最後。
+如果角色沒有出現、或名字不對，關掉教學關重新執行一次再試。"
+
+[sub_resource type="Resource" id="Step_7"]
+script = ExtResource("1_step")
+title = "7. 加分：變數＋條件"
+description = "用變數記住玩家的選擇（例如好感度），最後依照變數走不同的結局。這一步不影響前 6 步。"
+hint = "先到 Dialogic 的 Variables 分頁新增一個變數（例如「好感度」，初始值 0）。
+在選項底下加 Set Variable 事件（例如 好感度 += 1），結尾加 Condition 事件（例如 好感度 >= 1），底下放好結局，再加一個 Else 放另一個結局。"
+
+[resource]
+script = ExtResource("2_steps")
+steps = Array[ExtResource("1_step")]([SubResource("Step_1"), SubResource("Step_2"), SubResource("Step_3"), SubResource("Step_4"), SubResource("Step_5"), SubResource("Step_6"), SubResource("Step_7")])

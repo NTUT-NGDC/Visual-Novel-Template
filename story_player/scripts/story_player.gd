@@ -59,6 +59,20 @@ func _on_timeline_ended() -> void:
 	_end_panel.show()
 
 
+func _exit_tree() -> void:
+	_forget_temporary_characters()
+
+
+## 時間軸裡用了找不到的角色時（例如角色識別碼打錯），Dialogic 會臨時建立一個角色，
+## 登記在全域的角色對照表裡。這些臨時角色留到遊戲結束會讓遊戲當掉，
+## 所以離開這個場景（包括關掉遊戲視窗）時要清掉。
+func _forget_temporary_characters() -> void:
+	var directory: Dictionary = DialogicResourceUtil.get_directory("dch")
+	for identifier: Variant in directory.keys():
+		if directory[identifier] is Resource:
+			directory.erase(identifier)
+
+
 func _on_replay_pressed() -> void:
 	# Dialogic 重新播放時不會把變數重設回初始值，
 	# 不重設的話「好感度」這類變數會接著上一輪繼續加，可能走到錯的結局
