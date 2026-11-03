@@ -46,6 +46,10 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/dialogic/plugin.cfg")
 
+[gui]
+
+theme/custom_font="res://fonts/Cubic_11.woff2"
+
 [input]
 
 dialogic_default_action={

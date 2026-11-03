@@ -1,0 +1,253 @@
+[gd_scene format=3 uid="uid://b1jvye5b7c0ii"]
+
+[ext_resource type="Script" uid="uid://cw54juwy2wck" path="res://card_draw/scripts/card_draw.gd" id="1_script"]
+[ext_resource type="Resource" path="res://card_draw/data/card_deck.tres" id="2_deck"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Character"]
+bg_color = Color(0.27, 0.45, 0.75, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_CharacterHover"]
+bg_color = Color(0.35, 0.55, 0.88, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_Empty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Place"]
+bg_color = Color(0.25, 0.58, 0.4, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_PlaceHover"]
+bg_color = Color(0.32, 0.7, 0.48, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Trouble"]
+bg_color = Color(0.78, 0.36, 0.25, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_TroubleHover"]
+bg_color = Color(0.9, 0.45, 0.32, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="CardDraw" type="Control" unique_id=802890809]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+deck = ExtResource("2_deck")
+
+[node name="Background" type="ColorRect" parent="." unique_id=629354356]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13, 0.13, 0.17, 1)
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=99687902]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBox" unique_id=1674406050]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "抽靈感卡"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="VBox" unique_id=1057483582]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 22
+text = "點一張卡可以只重抽那一張"
+horizontal_alignment = 1
+
+[node name="Cards" type="HBoxContainer" parent="VBox" unique_id=982280724]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="CharacterCard" type="Button" parent="VBox/Cards" unique_id=1866272044]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 340)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBox_Character")
+theme_override_styles/pressed = SubResource("StyleBox_Character")
+theme_override_styles/hover = SubResource("StyleBox_CharacterHover")
+theme_override_styles/focus = SubResource("StyleBox_Empty")
+
+[node name="Margin" type="MarginContainer" parent="VBox/Cards/CharacterCard" unique_id=1372429380]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Cards/CharacterCard/Margin" unique_id=164457999]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CategoryLabel" type="Label" parent="VBox/Cards/CharacterCard/Margin/VBox" unique_id=1381719406]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "角色"
+horizontal_alignment = 1
+
+[node name="CharacterText" type="Label" parent="VBox/Cards/CharacterCard/Margin/VBox" unique_id=2145753182]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 33
+text = "（角色）"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="RedrawHint" type="Label" parent="VBox/Cards/CharacterCard/Margin/VBox" unique_id=587631478]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 22
+text = "點一下重抽"
+horizontal_alignment = 1
+
+[node name="PlaceCard" type="Button" parent="VBox/Cards" unique_id=1867879705]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 340)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBox_Place")
+theme_override_styles/pressed = SubResource("StyleBox_Place")
+theme_override_styles/hover = SubResource("StyleBox_PlaceHover")
+theme_override_styles/focus = SubResource("StyleBox_Empty")
+
+[node name="Margin" type="MarginContainer" parent="VBox/Cards/PlaceCard" unique_id=523824770]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Cards/PlaceCard/Margin" unique_id=1647155627]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CategoryLabel" type="Label" parent="VBox/Cards/PlaceCard/Margin/VBox" unique_id=1813323058]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "地點"
+horizontal_alignment = 1
+
+[node name="PlaceText" type="Label" parent="VBox/Cards/PlaceCard/Margin/VBox" unique_id=290718011]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 33
+text = "（地點）"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="RedrawHint" type="Label" parent="VBox/Cards/PlaceCard/Margin/VBox" unique_id=1064044366]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 22
+text = "點一下重抽"
+horizontal_alignment = 1
+
+[node name="TroubleCard" type="Button" parent="VBox/Cards" unique_id=618764414]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 340)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBox_Trouble")
+theme_override_styles/pressed = SubResource("StyleBox_Trouble")
+theme_override_styles/hover = SubResource("StyleBox_TroubleHover")
+theme_override_styles/focus = SubResource("StyleBox_Empty")
+
+[node name="Margin" type="MarginContainer" parent="VBox/Cards/TroubleCard" unique_id=1942199707]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Cards/TroubleCard/Margin" unique_id=724309587]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CategoryLabel" type="Label" parent="VBox/Cards/TroubleCard/Margin/VBox" unique_id=1999895854]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "麻煩"
+horizontal_alignment = 1
+
+[node name="TroubleText" type="Label" parent="VBox/Cards/TroubleCard/Margin/VBox" unique_id=1126456818]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 33
+text = "（麻煩）"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="RedrawHint" type="Label" parent="VBox/Cards/TroubleCard/Margin/VBox" unique_id=553872007]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 22
+text = "點一下重抽"
+horizontal_alignment = 1
+
+[node name="RedrawAllButton" type="Button" parent="VBox" unique_id=733737354]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "全部重抽"
