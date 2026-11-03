@@ -4,6 +4,7 @@
 
 # 匯出的遊戲檔（Web 版請匯出到 build/ 資料夾，再另外上傳到 itch.io）
 build/
+*.zip
 
 # 作業系統自動產生的檔案
 .DS_Store
