@@ -1,7 +1,7 @@
 extends Node
 ## 標題畫面、音量設定、暫停選單的自動測試：
 ## 1. 故事場景欄位空的、找不到檔案、選到不是場景的檔案 → 顯示提示，不會換場景
-## 2. 設定面板可以打開、關閉；電腦版看得到「離開遊戲」
+## 2. 設定面板可以打開、關閉；電腦版看得到「離開遊戲」；標題音樂會自動播放、播完重播
 ## 3. 音量：調整後會存檔，重新讀取後音量和滑桿位置都對；拉到 0 是靜音
 ## 4. 預設設定（範例故事）：標題 → 按開始 → 範例故事播完 → 回到標題，跑兩輪，第二輪變數有重設
 ## 5. 暫停選單：打開時 Dialogic 暫停、故事不會往下走；繼續後恢復；回到標題時時間軸已停止
@@ -35,6 +35,7 @@ func _ready() -> void:
 	await _test_problem("res://my_story/不存在的場景.tscn", "找不到故事場景")
 	await _test_problem("res://example/characters/jane.dch", "不是場景")
 	await _test_settings_panel()
+	await _test_title_music()
 	await _test_sound_settings()
 	await _test_full_flow()
 	await _test_pause_menu()
@@ -77,6 +78,29 @@ func _test_settings_panel() -> void:
 	_expect(panel.visible, "按「設定」打開面板")
 	(title.get_node("%BackButton") as Button).pressed.emit()
 	_expect(not panel.visible, "按「返回」關掉面板")
+	title.queue_free()
+	await get_tree().process_frame
+
+
+func _test_title_music() -> void:
+	print("--- 標題音樂 ---")
+	var title: Control = TITLE_SCENE.instantiate()
+	add_child(title)
+	await get_tree().process_frame
+	_expect(not title.has_node("TitleMusicPlayer"), "預設沒有放音樂，不會建立播放器、不會出錯")
+	title.queue_free()
+	await get_tree().process_frame
+
+	# 放一個 0.5 秒的靜音檔，確認會自動播放、播完會重播
+	title = TITLE_SCENE.instantiate()
+	title.set("title_music", load("res://tests/audio/silence.wav"))
+	add_child(title)
+	await get_tree().process_frame
+	var music: AudioStreamPlayer = title.get_node_or_null("TitleMusicPlayer")
+	_expect(music != null and music.playing, "放了音樂就會自動播放")
+	_expect(music != null and music.bus == &"Music", "標題音樂走 Music 匯流排（設定裡的「音樂」管得到）")
+	await get_tree().create_timer(1.2).timeout
+	_expect(music != null and music.playing, "播完會從頭再播")
 	title.queue_free()
 	await get_tree().process_frame
 

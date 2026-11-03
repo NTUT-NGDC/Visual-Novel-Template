@@ -9,11 +9,15 @@ extends Control
 ##   ・字的大小、顏色、字型：各節點的 Theme Overrides
 ##   ・背景圖：把圖片拖進 BackgroundImage 的 Texture
 ##
-## 想接上自己的故事：點最上層的 TitleScreen 節點，
-## 把自己的故事場景（.tscn）從檔案系統拖進檢查器的「Story Scene」。
+## 點最上層的 TitleScreen 節點，在檢查器設定：
+##   ・Story Scene：把自己的故事場景（.tscn）從檔案系統拖進來
+##   ・Title Music：把標題畫面的背景音樂拖進來（空著就沒有音樂）
 
 ## 按「開始遊戲」後要換到的故事場景（.tscn）
 @export_file("*.tscn") var story_scene: String = "res://example/story_scene/story_scene.tscn"
+## 標題畫面的背景音樂（.mp3、.ogg、.wav），空著就沒有音樂。
+## 音量跟著設定裡的「音樂」滑桿，播完會從頭再播
+@export var title_music: AudioStream
 
 @onready var _start_button: Button = %StartButton
 @onready var _settings_button: Button = %SettingsButton
@@ -33,6 +37,21 @@ func _ready() -> void:
 	_settings_button.pressed.connect(_settings_panel.show)
 	_back_button.pressed.connect(_settings_panel.hide)
 	_quit_button.pressed.connect(get_tree().quit)
+	_play_title_music()
+
+
+## 有設定標題音樂就播放：建立一個播放器，接到 Music 匯流排（設定裡的「音樂」滑桿管得到）
+func _play_title_music() -> void:
+	if title_music == null:
+		return
+	var player := AudioStreamPlayer.new()
+	player.name = "TitleMusicPlayer"
+	player.stream = title_music
+	player.bus = &"Music"
+	# 播完就從頭再播（MP3 匯入後預設不會循環）
+	player.finished.connect(player.play)
+	add_child(player)
+	player.play()
 
 
 func _unhandled_input(event: InputEvent) -> void:
