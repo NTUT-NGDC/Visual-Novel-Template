@@ -16,7 +16,6 @@ corner_radius_bottom_left = 8
 
 [node name="StoryPlayer" type="Node" unique_id=1035319775]
 script = ExtResource("1_script")
-timeline_path = "uid://db1pl74ejg0q"
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1762542346]
 layer = 20
