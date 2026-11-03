@@ -1,7 +1,7 @@
 class_name StoryChecker
 extends RefCounted
 ## 教學關的檢查邏輯：讀一個資料夾裡的角色檔（.dch）和時間軸檔（.dtl），
-## 判斷教學關第 1～5、7 步有沒有做到。第 6 步（試玩）是執行時檢查，在 tutorial.gd。
+## 判斷教學關第 1～7、9～11 步有沒有做到。第 8 步（試玩）是執行時檢查，在 tutorial.gd。
 ##
 ## 只負責判斷、不碰畫面，教學關介面和測試（tests/scripts/tutorial_checker_test.gd）都用它。
 ## 每次檢查都直接從硬碟讀檔，不用 load()，社員存檔後再按「檢查」才會看到新的內容。
@@ -42,12 +42,39 @@ class TimelineInfo:
 	var set_variables: PackedStringArray = []
 	## 有沒有條件判斷（if／elif）
 	var has_condition: bool = false
+	## 背景事件選的圖片路徑
+	var background_images: PackedStringArray = []
+	## 有背景事件，但沒有選圖片（空的、只有 res://、或選了顏色）
+	var has_empty_background: bool = false
+	## 有選頻道（例如 music）的音樂檔案路徑
+	var music_files: PackedStringArray = []
+	## 有選音檔，但沒選頻道（只會當成音效播一次）
+	var has_sound_only: bool = false
+	## 有音樂事件，但沒有選音檔
+	var has_empty_audio: bool = false
+	## 台詞裡有沒有文字效果（[pause]、[speed]、[lspeed]）
+	var has_text_effect: bool = false
+	## 有沒有等待（Wait）事件
+	var has_wait: bool = false
+	## 有沒有輸入文字（Text Input）事件
+	var has_text_input: bool = false
+	## 輸入文字事件存進去的變數名字
+	var input_variables: PackedStringArray = []
+	## 台詞裡用 {變數} 顯示的變數名字
+	var text_variables: PackedStringArray = []
 
 
 ## 角色至少要有幾張設定了圖片的立繪
 const MIN_PORTRAITS: int = 2
 ## 時間軸至少要有幾句台詞
 const MIN_LINES: int = 3
+## 背景可以選的圖片種類（跟 Dialogic 背景事件判斷「這是圖片」的方式一樣）
+const IMAGE_EXTENSIONS: PackedStringArray = ["png", "svg", "jpg", "jpeg"]
+
+## 台詞裡控制節奏的文字效果，例如 [pause=1]、[speed=0.5]
+static var _text_effect_regex: RegEx = RegEx.create_from_string(r"(?<!\\)\[\s*(pause|speed|lspeed)\b")
+## 台詞裡顯示變數的寫法，例如 {玩家名字}
+static var _text_variable_regex: RegEx = RegEx.create_from_string(r"(?<!\\)\{(?<name>[^{}]+)\}")
 
 ## 要檢查的資料夾，例如 res://my_story
 var folder_path: String = ""
@@ -246,7 +273,55 @@ func check_label_and_jump() -> Result:
 #endregion
 
 
-#region 第 7 步：加分：變數＋條件
+#region 第 6 步：換背景
+
+func check_background() -> Result:
+	var problem: String = _check_folder("時間軸檔（.dtl）", _timelines.size())
+	if problem != "":
+		return Result.new(false, problem)
+
+	var empty_message: String = ""
+	for info: TimelineInfo in _timelines:
+		if not info.background_images.is_empty():
+			return Result.new(true, "%s（%s）" % [info.file_name, info.background_images[0].get_file()])
+		if info.has_empty_background and empty_message == "":
+			empty_message = "%s 裡有 Background 事件，但還沒選圖片。\n「with」要選 Image，再選一張背景圖。" % info.file_name
+
+	if empty_message != "":
+		return Result.new(false, empty_message)
+	return Result.new(false, "時間軸裡還沒有換背景（Background 事件）。")
+
+#endregion
+
+
+#region 第 7 步：背景音樂
+
+func check_music() -> Result:
+	var problem: String = _check_folder("時間軸檔（.dtl）", _timelines.size())
+	if problem != "":
+		return Result.new(false, problem)
+
+	# 都沒過時，依照「最接近過關」的情況給原因：有音檔但沒選頻道 > 有事件但沒選音檔
+	var sound_only_message: String = ""
+	var empty_message: String = ""
+	for info: TimelineInfo in _timelines:
+		if not info.music_files.is_empty():
+			return Result.new(true, "%s（%s）" % [info.file_name, info.music_files[0].get_file()])
+		if info.has_sound_only and sound_only_message == "":
+			sound_only_message = "%s 裡有播放音檔，但沒有選頻道，只會當成音效播一次。\n頻道（on … channel）選 music，音樂才會一直循環。" % info.file_name
+		if info.has_empty_audio and empty_message == "":
+			empty_message = "%s 裡有 Audio 事件，但還沒選音檔（Play 旁邊選一個音樂檔）。" % info.file_name
+
+	if sound_only_message != "":
+		return Result.new(false, sound_only_message)
+	if empty_message != "":
+		return Result.new(false, empty_message)
+	return Result.new(false, "時間軸裡還沒有背景音樂（Audio 事件）。")
+
+#endregion
+
+
+#region 第 9 步：額外：變數＋條件
 
 func check_variable_and_condition() -> Result:
 	var problem: String = _check_folder("時間軸檔（.dtl）", _timelines.size())
@@ -288,6 +363,58 @@ func _variable_exists(variable_name: String) -> bool:
 			return false
 		current = (current as Dictionary)[part]
 	return true
+
+#endregion
+
+
+#region 第 10 步：額外：文字節奏
+
+func check_text_rhythm() -> Result:
+	var problem: String = _check_folder("時間軸檔（.dtl）", _timelines.size())
+	if problem != "":
+		return Result.new(false, problem)
+
+	for info: TimelineInfo in _timelines:
+		if info.has_text_effect:
+			return Result.new(true, "%s（文字效果）" % info.file_name)
+		if info.has_wait:
+			return Result.new(true, "%s（Wait）" % info.file_name)
+	return Result.new(false, "時間軸裡還沒有文字效果（例如在台詞裡加 [pause=1]）或等待（Wait 事件）。")
+
+#endregion
+
+
+#region 第 11 步：額外：輸入名字
+
+func check_name_input() -> Result:
+	var problem: String = _check_folder("時間軸檔（.dtl）", _timelines.size())
+	if problem != "":
+		return Result.new(false, problem)
+
+	# 都沒過時，依照「最接近過關」的情況給原因：輸入了但台詞沒用到 > 變數沒新增 > 沒選變數
+	var unused_message: String = ""
+	var undefined_message: String = ""
+	var no_variable_message: String = ""
+	for info: TimelineInfo in _timelines:
+		for variable_name: String in info.input_variables:
+			if not _variable_exists(variable_name):
+				if undefined_message == "":
+					undefined_message = "%s 用了變數「%s」，但還沒在 Dialogic 的 Variables 分頁新增。\n（已經新增了的話，關掉教學關重新執行一次）" % [info.file_name, variable_name]
+				continue
+			if variable_name in info.text_variables:
+				return Result.new(true, "%s（%s）" % [info.file_name, variable_name])
+			if unused_message == "":
+				unused_message = "%s 裡有讓玩家輸入「%s」，但台詞裡還沒用到它。\n在台詞裡寫 {%s}，就會顯示玩家輸入的內容。" % [info.file_name, variable_name, variable_name]
+		if info.has_text_input and info.input_variables.is_empty() and no_variable_message == "":
+			no_variable_message = "%s 裡有 Text Input 事件，但還沒選要存進哪個變數。" % info.file_name
+
+	if unused_message != "":
+		return Result.new(false, unused_message)
+	if undefined_message != "":
+		return Result.new(false, undefined_message)
+	if no_variable_message != "":
+		return Result.new(false, no_variable_message)
+	return Result.new(false, "時間軸裡還沒有讓玩家輸入文字（Text Input 事件）。")
 
 #endregion
 
@@ -390,6 +517,10 @@ func _read_timeline(path: String) -> TimelineInfo:
 			info.line_count += 1
 			if text_event.portrait != "":
 				_append_unique(info.portrait_changed, _written_character_id(text_event.regex, text_event.event_node_as_text))
+			if _text_effect_regex.search(text_event.text) != null:
+				info.has_text_effect = true
+			for found: RegExMatch in _text_variable_regex.search_all(text_event.text):
+				_append_unique(info.text_variables, found.get_string("name").strip_edges())
 		elif event is DialogicCharacterEvent:
 			var character_event: DialogicCharacterEvent = event
 			var character_id: String = _written_character_id(character_event.regex, character_event.event_node_as_text)
@@ -414,6 +545,29 @@ func _read_timeline(path: String) -> TimelineInfo:
 		elif event is DialogicConditionEvent:
 			if (event as DialogicConditionEvent).condition_type != DialogicConditionEvent.ConditionTypes.ELSE:
 				info.has_condition = true
+		elif event is DialogicBackgroundEvent:
+			# 編輯器選了 Image 但還沒選圖片時，路徑是 "res://"
+			var image: String = (event as DialogicBackgroundEvent).argument.strip_edges()
+			if image.begins_with("res://") and image.get_extension().to_lower() in IMAGE_EXTENSIONS:
+				info.background_images.append(image)
+			else:
+				info.has_empty_background = true
+		elif event is DialogicAudioEvent:
+			# 沒選頻道的音檔只會當成音效播一次；沒選音檔是「停止這個頻道的音樂」
+			var audio_event: DialogicAudioEvent = event
+			if audio_event.file_path == "":
+				info.has_empty_audio = true
+			elif audio_event.channel_name == "":
+				info.has_sound_only = true
+			else:
+				info.music_files.append(audio_event.file_path)
+		elif event is DialogicWaitEvent:
+			info.has_wait = true
+		elif event is DialogicTextInputEvent:
+			info.has_text_input = true
+			# 變數名字有時候會寫成 {玩家名字}，去掉大括號
+			var input_variable: String = (event as DialogicTextInputEvent).variable.strip_edges().trim_prefix("{").trim_suffix("}")
+			_append_unique(info.input_variables, input_variable)
 
 		if (event as DialogicEvent).can_contain_events:
 			depth += 1

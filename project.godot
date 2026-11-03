@@ -36,7 +36,8 @@ directories/dtl_directory={
 }
 layout/style_directory={}
 variables={
-"好感度": 0
+"好感度": 0,
+"玩家名字": ""
 }
 
 [display]

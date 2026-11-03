@@ -1,13 +1,14 @@
 extends Control
-## 教學關：列出 7 個步驟，按「檢查」檢查 my_story 資料夾裡的角色和時間軸有沒有做對。
+## 教學關：列出 11 個步驟，按「檢查」檢查 my_story 資料夾裡的角色和時間軸有沒有做對。
 ##
-## 第 1～5、7 步：讀檔檢查（邏輯在 story_checker.gd）。
-## 第 6 步：按「試玩」實際播放時間軸，有播到結尾才算過。
+## 第 1～7、9～11 步：讀檔檢查（邏輯在 story_checker.gd）。
+## 第 8 步：按「試玩」實際播放時間軸，有播到結尾才算過。
+## 第 9～11 步是額外題，不算在「已完成幾步」裡，另外計算。
 ## 步驟的文字在 tutorial/data/tutorial_steps.tres，要改文字改那裡就好。
 
 const STEP_ROW_SCENE: PackedScene = preload("res://tutorial/step_row.tscn")
-## 第 7 步（加分）在列表裡是第幾個（從 0 開始），它不算在「已完成幾步」裡
-const BONUS_STEP_INDEX: int = 6
+## 額外題在列表裡是第幾個（從 0 開始）
+const EXTRA_STEP_INDEXES: Array[int] = [8, 9, 10]
 
 ## 要檢查的資料夾，社員的角色和時間軸放這裡
 @export_dir var story_folder: String = "res://my_story"
@@ -30,7 +31,7 @@ var _timeline_paths: PackedStringArray = []
 var _playing: bool = false
 ## 這次試玩是按「結束試玩」中途停下的
 var _stopped_by_user: bool = false
-## 第 6 步有沒有過、是哪條時間軸播完的
+## 第 8 步（試玩）有沒有過、是哪條時間軸播完的
 var _play_succeeded: bool = false
 var _played_file: String = ""
 ## 正在試玩的時間軸檔名
@@ -59,25 +60,34 @@ func _ready() -> void:
 func run_checks() -> void:
 	var checker := StoryChecker.new(story_folder)
 	var play_message: String = _played_file if _play_succeeded else "還沒有試玩成功。"
-	# 順序跟 tutorial_steps.tres 一樣：1～5 步、第 6 步試玩、第 7 步加分
+	# 順序跟 tutorial_steps.tres 一樣：1～7 步、第 8 步試玩、第 9～11 步額外題
 	var results: Array[StoryChecker.Result] = [
 		checker.check_character(),
 		checker.check_lines(),
 		checker.check_join_and_portrait(),
 		checker.check_choice(),
 		checker.check_label_and_jump(),
+		checker.check_background(),
+		checker.check_music(),
 		StoryChecker.Result.new(_play_succeeded, play_message),
 		checker.check_variable_and_condition(),
+		checker.check_text_rhythm(),
+		checker.check_name_input(),
 	]
 
 	var done_count: int = 0
+	var extra_done_count: int = 0
 	for index: int in results.size():
 		if index < _rows.size():
 			_rows[index].show_result(results[index].passed, results[index].message)
-		if index != BONUS_STEP_INDEX and results[index].passed:
+		if not results[index].passed:
+			continue
+		if index in EXTRA_STEP_INDEXES:
+			extra_done_count += 1
+		else:
 			done_count += 1
-	var bonus_text: String = "完成！" if results[BONUS_STEP_INDEX].passed else "未完成"
-	_progress_label.text = "已完成 %d／%d 步　加分：%s" % [done_count, results.size() - 1, bonus_text]
+	var required_count: int = results.size() - EXTRA_STEP_INDEXES.size()
+	_progress_label.text = "已完成 %d／%d 步　額外：%d／%d" % [done_count, required_count, extra_done_count, EXTRA_STEP_INDEXES.size()]
 
 	_refresh_timeline_option(checker.get_timeline_paths())
 

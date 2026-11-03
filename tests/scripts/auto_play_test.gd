@@ -29,6 +29,7 @@ func _ready() -> void:
 	Dialogic.event_handled.connect(_on_event_handled)
 	Dialogic.Choices.question_shown.connect(_on_question_shown)
 	Dialogic.Choices.choice_selected.connect(_on_choice_selected)
+	Dialogic.TextInput.input_shown.connect(_on_text_input_shown)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
 	get_tree().create_timer(timeout_seconds).timeout.connect(_on_timeout)
 
@@ -69,6 +70,16 @@ func _on_question_shown(_info: Dictionary) -> void:
 func _on_choice_selected(info: Dictionary) -> void:
 	_waiting_for_choice = false
 	print("  >> 選了：", info.get("text", ""))
+
+
+## 遇到輸入名字（Text Input）時自動填一個名字。
+## 輸入框出現之後 Dialogic 才開始等「確認」，所以等一個畫面再送出；
+## Text Input 會關掉自動略過，送出後要再打開
+func _on_text_input_shown(_info: Dictionary) -> void:
+	print("  >> 輸入名字：測試")
+	await get_tree().process_frame
+	Dialogic.TextInput.input_confirmed.emit("測試")
+	Dialogic.Inputs.auto_skip.enabled = true
 
 
 func _on_timeline_ended() -> void:

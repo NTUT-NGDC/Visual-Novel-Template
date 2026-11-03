@@ -1,7 +1,9 @@
 [background arg="res://example/images/bg_classroom.png" fade="0.0"]
+audio music "res://tests/audio/silence.wav"
+[text_input text="你叫什麼名字？" var="玩家名字" default="同學"]
 期末考前一天，放學後的教室。
 join jane (難過) left
-jane: 怎麼辦……我的筆記本不見了。
+jane: {玩家名字}，怎麼辦……[pause=0.5]我的筆記本不見了。
 jane: 明天就要考試了，裡面有我整理好的所有重點。
 join antonio (開心) right
 antonio: 喔？資優生也會弄丟東西啊。
@@ -27,7 +29,7 @@ if {好感度} >= 1:
 	你們一起讀到很晚。這大概是期末考週最棒的一天。
 else:
 	[background arg="res://example/images/bg_classroom_dusk.png" fade="1.0"]
-	jane (難過): ……我先回家了。
+	jane (難過): ……[pause=1]我先回家了。
 	leave jane
 	夕陽照進教室，只剩下你一個人。
 leave --All--

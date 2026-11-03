@@ -61,7 +61,7 @@ text = "Dialogic 教學關"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "已完成 0／6 步　加分：未完成"
+text = "已完成 0／8 步　額外：0／3"
 
 [node name="CheckButton" type="Button" parent="MainPanel/Margin/VBox/Header" unique_id=1616881346]
 unique_name_in_owner = true

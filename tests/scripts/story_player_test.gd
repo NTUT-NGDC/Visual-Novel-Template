@@ -22,9 +22,10 @@ func _ready() -> void:
 	Dialogic.Inputs.auto_skip.time_per_event = 0.01
 	Dialogic.Choices.question_shown.connect(_on_question_shown)
 	Dialogic.Choices.choice_selected.connect(_on_choice_selected)
+	Dialogic.TextInput.input_shown.connect(_on_text_input_shown)
 
 	await _test_play_and_replay()
-	await _test_problem_path("res://my_story/timelines/my_story.dtl", "找不到時間軸")
+	await _test_problem_path("res://my_story/timelines/不存在的時間軸.dtl", "找不到時間軸")
 	await _test_problem_path("res://example/characters/jane.dch", "不是時間軸")
 	await _test_problem_path("", "還沒有指定")
 
@@ -105,3 +106,12 @@ func _on_question_shown(_info: Dictionary) -> void:
 
 func _on_choice_selected(_info: Dictionary) -> void:
 	_waiting_for_choice = false
+
+
+## 遇到輸入名字（Text Input）時自動填一個名字。
+## 輸入框出現之後 Dialogic 才開始等「確認」，所以等一個畫面再送出；
+## Text Input 會關掉自動略過，送出後要再打開
+func _on_text_input_shown(_info: Dictionary) -> void:
+	await get_tree().process_frame
+	Dialogic.TextInput.input_confirmed.emit("測試")
+	Dialogic.Inputs.auto_skip.enabled = true
