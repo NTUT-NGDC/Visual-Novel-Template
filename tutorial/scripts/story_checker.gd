@@ -28,10 +28,10 @@ class TimelineInfo:
 	var file_name: String = ""
 	## 台詞（包含旁白）有幾句
 	var line_count: int = 0
-	## 有沒有角色登場（join）
-	var has_join: bool = false
-	## 有沒有換過立繪（update 角色 (立繪)，或台詞裡的 角色 (立繪): …）
-	var has_portrait_change: bool = false
+	## 登場（join）的角色識別碼
+	var joined: PackedStringArray = []
+	## 換過立繪的角色識別碼（update 角色 (立繪)，或台詞裡的 角色 (立繪): …）
+	var portrait_changed: PackedStringArray = []
 	## 同一組選項最多有幾個
 	var biggest_choice_group: int = 0
 	## 所有標籤的名字
@@ -56,6 +56,8 @@ var _folder_exists: bool = false
 var _character_paths: PackedStringArray = []
 var _timeline_paths: PackedStringArray = []
 var _timelines: Array[TimelineInfo] = []
+## 資料夾裡的角色在時間軸裡用的識別碼（社員自己建立的角色）
+var _own_character_ids: PackedStringArray = []
 
 
 func _init(p_folder_path: String) -> void:
@@ -64,6 +66,7 @@ func _init(p_folder_path: String) -> void:
 	if not _folder_exists:
 		return
 	_collect_files(folder_path, _character_paths, _timeline_paths)
+	_own_character_ids = _find_own_character_ids()
 	for path: String in _timeline_paths:
 		_timelines.append(_read_timeline(path))
 
@@ -162,15 +165,34 @@ func check_join_and_portrait() -> Result:
 	if problem != "":
 		return Result.new(false, problem)
 
-	var joined: TimelineInfo = null
+	# 要過關：自己建立的角色登場，而且「同一個角色」換過立繪。
+	# 都沒過時，依照「最接近過關」的情況給原因：自己的角色有登場 > 只有別的角色登場 > 沒人登場
+	var own_joined_message: String = ""
+	var other_joined_message: String = ""
 	for info: TimelineInfo in _timelines:
-		if info.has_join and info.has_portrait_change:
-			return Result.new(true, info.file_name)
-		if info.has_join and joined == null:
-			joined = info
-	if joined == null:
-		return Result.new(false, "時間軸裡還沒有角色登場（Character 事件選 Join）。")
-	return Result.new(false, "%s 裡有角色登場了，但還沒換過立繪（Character 事件選 Update 並選一張立繪，或在台詞選角色時順便選立繪）。" % joined.file_name)
+		for character_id: String in info.joined:
+			if not character_id in _own_character_ids:
+				if other_joined_message == "":
+					other_joined_message = "%s 裡登場的「%s」不是你在 %s 建立的角色（可能選到範例角色了）。\nJoin 要選你自己建立的角色。" % [info.file_name, character_id, folder_path.get_file()]
+				continue
+			if character_id in info.portrait_changed:
+				return Result.new(true, "%s（%s）" % [info.file_name, character_id])
+			if own_joined_message != "":
+				continue
+			var others: PackedStringArray = []
+			for changed_id: String in info.portrait_changed:
+				if changed_id != character_id and not changed_id in others:
+					others.append(changed_id)
+			if others.is_empty():
+				own_joined_message = "%s 裡「%s」登場了，但還沒換過立繪（Character 事件選 Update 並選一張立繪，或在台詞選角色時順便選立繪）。" % [info.file_name, character_id]
+			else:
+				own_joined_message = "%s 裡登場的是「%s」，但換表情的是「%s」。\n換表情要選已經登場的同一個角色。" % [info.file_name, character_id, "」「".join(others)]
+
+	if own_joined_message != "":
+		return Result.new(false, own_joined_message)
+	if other_joined_message != "":
+		return Result.new(false, other_joined_message)
+	return Result.new(false, "時間軸裡還沒有角色登場（Character 事件選 Join）。")
 
 #endregion
 
@@ -304,6 +326,34 @@ func _collect_files(path: String, character_paths: PackedStringArray, timeline_p
 			_collect_files(path.path_join(dir_name), character_paths, timeline_paths)
 
 
+## 資料夾裡的角色在時間軸裡用的識別碼：預設是檔名（mei.dch → mei）。
+## 檔名跟別的角色重複時，Dialogic 會改成「資料夾/檔名」，這種從角色對照表裡找。
+func _find_own_character_ids() -> PackedStringArray:
+	var ids: PackedStringArray = []
+	for path: String in _character_paths:
+		_append_unique(ids, path.get_file().get_basename())
+	var directory: Dictionary = DialogicResourceUtil.get_directory("dch")
+	for identifier: Variant in directory.keys():
+		var value: Variant = directory[identifier]
+		if value is String and (value as String) in _character_paths:
+			_append_unique(ids, str(identifier))
+	return ids
+
+
+## 從事件的原始文字讀出寫的是哪個角色識別碼。
+## 不用 event.character：角色找不到時（例如教學關執行後才新增的角色），Dialogic 會把名字丟掉
+static func _written_character_id(regex: RegEx, event_text: String) -> String:
+	var result: RegExMatch = regex.search(event_text)
+	if result == null:
+		return ""
+	return result.get_string("name").strip_edges()
+
+
+static func _append_unique(list: PackedStringArray, value: String) -> void:
+	if value != "" and not value in list:
+		list.append(value)
+
+
 ## 用 Dialogic 的解析器讀時間軸，整理成 TimelineInfo
 func _read_timeline(path: String) -> TimelineInfo:
 	var info := TimelineInfo.new()
@@ -336,15 +386,17 @@ func _read_timeline(path: String) -> TimelineInfo:
 			choice_groups[depth] = 0
 
 		if event is DialogicTextEvent:
+			var text_event: DialogicTextEvent = event
 			info.line_count += 1
-			if (event as DialogicTextEvent).portrait != "":
-				info.has_portrait_change = true
+			if text_event.portrait != "":
+				_append_unique(info.portrait_changed, _written_character_id(text_event.regex, text_event.event_node_as_text))
 		elif event is DialogicCharacterEvent:
 			var character_event: DialogicCharacterEvent = event
+			var character_id: String = _written_character_id(character_event.regex, character_event.event_node_as_text)
 			if character_event.action == DialogicCharacterEvent.Actions.JOIN:
-				info.has_join = true
+				_append_unique(info.joined, character_id)
 			elif character_event.action == DialogicCharacterEvent.Actions.UPDATE and character_event.portrait != "":
-				info.has_portrait_change = true
+				_append_unique(info.portrait_changed, character_id)
 		elif event is DialogicLabelEvent:
 			var label_name: String = (event as DialogicLabelEvent).name
 			if label_name != "":

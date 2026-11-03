@@ -25,6 +25,8 @@ const CASES: Array[Array] = [
 	["join_update", "..P...", {}],
 	["join_text_portrait", "..P...", {}],
 	["join_no_change", "..F...", {3: "還沒換過立繪"}],
+	["join_other_character", "..F...", {3: "換表情的是「hana」"}],
+	["join_example_character", "..F...", {3: "不是你在"}],
 	["choice_pass", "...P..", {}],
 	["choice_single", "...F..", {4: "同一組只有 1 個"}],
 	["choice_nested", "...F..", {4: "同一組只有 1 個"}],
