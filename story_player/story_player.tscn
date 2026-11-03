@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://c60thqd12vatk"]
+
+[ext_resource type="Script" uid="uid://c08g2i5gqkaju" path="res://story_player/scripts/story_player.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://story_player/variable_display.tscn" id="2_vars"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0, 0, 0, 0.75)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="StoryPlayer" type="Node" unique_id=1035319775]
+script = ExtResource("1_script")
+timeline_path = "uid://db1pl74ejg0q"
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1762542346]
+layer = 20
+
+[node name="MessagePanel" type="CenterContainer" parent="UILayer" unique_id=1837984061]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="UILayer/MessagePanel" unique_id=2124668290]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MessageLabel" type="Label" parent="UILayer/MessagePanel/Panel" unique_id=1171567899]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "（提示文字）"
+autowrap_mode = 3
+
+[node name="EndPanel" type="CenterContainer" parent="UILayer" unique_id=1659692688]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="UILayer/EndPanel" unique_id=1219419535]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="UILayer/EndPanel/Panel" unique_id=306119324]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="EndLabel" type="Label" parent="UILayer/EndPanel/Panel/VBox" unique_id=297212733]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "— 結束 —"
+horizontal_alignment = 1
+
+[node name="ReplayButton" type="Button" parent="UILayer/EndPanel/Panel/VBox" unique_id=1754181218]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "重玩"
+
+[node name="VariableDisplay" parent="." unique_id=1190925519 instance=ExtResource("2_vars")]
+visible = false

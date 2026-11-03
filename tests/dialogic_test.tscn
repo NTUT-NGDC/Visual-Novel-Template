@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dklqhr42isa6g"]
 
-[ext_resource type="Script" uid="uid://iisi6hy8u7ji" path="res://tests/dialogic_test.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://iisi6hy8u7ji" path="res://tests/scripts/dialogic_test.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://story_player/variable_display.tscn" id="2_vars"]
 
 [node name="DialogicTest" type="Node" unique_id=393262998]

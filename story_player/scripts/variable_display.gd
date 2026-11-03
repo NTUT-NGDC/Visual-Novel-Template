@@ -1,7 +1,8 @@
 extends CanvasLayer
 ## 變數面板：在畫面左上角顯示所有 Dialogic 變數目前的值，
 ## 方便確認「好感度」這類變數有沒有照預期改變。
-## 不想顯示的話，在檢查器把這個節點的 Visible 關掉就好。
+## 在播放場景裡預設是隱藏的，要除錯時在檢查器把這個節點的 Visible 打開。
+## 匯出給別人玩之前記得關掉。
 
 @onready var _list_label: Label = %ListLabel
 
@@ -9,7 +10,8 @@ extends CanvasLayer
 func _ready() -> void:
 	# 時間軸裡的「設定變數」事件改了變數時，Dialogic 會發出 variable_changed
 	Dialogic.VAR.variable_changed.connect(_on_variable_changed)
-	# 開始播放時變數會重設回初始值，但不會發出 variable_changed，所以這裡也刷新一次
+	# 重玩時播放場景會用 Dialogic.VAR.reset() 把變數重設回初始值，
+	# reset() 不會發出 variable_changed，所以在時間軸開始時也刷新一次
 	Dialogic.timeline_started.connect(_refresh)
 	_refresh()
 

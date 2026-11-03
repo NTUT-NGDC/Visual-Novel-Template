@@ -3,11 +3,11 @@ extends Node
 ## 印出實際播到的台詞和最後的變數，用來確認每條路線都能跑到結局。
 ##
 ## 在命令列執行（-- 後面是參數，都可以省略）：
-##   godot --headless --path . res://tests/auto_play_test.tscn -- timeline=res://example/example_story.dtl choice=2
+##   godot --headless --path . res://tests/auto_play_test.tscn -- timeline=res://example/timelines/example_story.dtl choice=2
 ## choice 是每次遇到選項時要選第幾個（從 1 開始，跟 Dialogic 選項按鈕的編號一樣）。
 
 ## 要播放的時間軸
-@export_file("*.dtl") var timeline_path: String = "res://example/example_story.dtl"
+@export_file("*.dtl") var timeline_path: String = "res://example/timelines/example_story.dtl"
 ## 遇到選項時選第幾個（從 1 開始）
 @export var choice_index: int = 1
 ## 超過這個秒數還沒播完就當作失敗
