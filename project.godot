@@ -11,16 +11,32 @@ config_version=5
 [application]
 
 config/name="Visual Novel Template"
-run/main_scene="uid://dklqhr42isa6g"
+run/main_scene="res://title_screen/title_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Dialogic="*uid://ds2q0uclmolvu"
+SoundSettings="*res://settings/scripts/sound_settings.gd"
 
 [dialogic]
 
+audio/channel_defaults={
+"": {
+"audio_bus": "SFX",
+"fade_length": 0.0,
+"loop": false,
+"volume": 0.0
+},
+"music": {
+"audio_bus": "Music",
+"fade_length": 0.0,
+"loop": true,
+"volume": 0.0
+}
+}
+audio/type_sound_bus="SFX"
 directories/dch_directory={
 "antonio": "res://example/characters/antonio.dch",
 "character": "res://my_story/character.dch",
