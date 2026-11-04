@@ -211,7 +211,7 @@ func check_join_and_portrait() -> Result:
 				if changed_id != character_id and not changed_id in others:
 					others.append(changed_id)
 			if others.is_empty():
-				own_joined_message = "%s 裡「%s」登場了，但還沒換過立繪（Character 事件選 Update 並選一張立繪，或在台詞選角色時順便選立繪）。" % [info.file_name, character_id]
+				own_joined_message = "%s 裡「%s」登場了，但還沒換過立繪（Character 事件選 Update，按 Change Portrait 圖示再選立繪，或在台詞選角色時順便選立繪）。" % [info.file_name, character_id]
 			else:
 				own_joined_message = "%s 裡登場的是「%s」，但換表情的是「%s」。\n換表情要選已經登場的同一個角色。" % [info.file_name, character_id, "」「".join(others)]
 
@@ -239,7 +239,7 @@ func check_choice() -> Result:
 			best = info
 	if best.biggest_choice_group == 0:
 		return Result.new(false, "時間軸裡還沒有選項（Choice）。")
-	return Result.new(false, "%s 裡有選項，但同一組只有 1 個，至少要 2 個。\n同一組的選項要在同一層、一個接一個排在一起。" % best.file_name)
+	return Result.new(false, "%s 裡有選項，但同一組只有 1 個，至少要 2 個。\n第二個選項要按 End of choice 那一列的 Add Choice 新增。" % best.file_name)
 
 #endregion
 
@@ -344,7 +344,7 @@ func check_variable_and_condition() -> Result:
 			return Result.new(true, info.file_name)
 		if partial_message == "":
 			if not info.set_variables.is_empty():
-				partial_message = "%s 裡有設定變數，但還沒有條件判斷（Condition 事件選 If）。" % info.file_name
+				partial_message = "%s 裡有設定變數，但還沒有條件判斷（Condition 事件）。" % info.file_name
 			elif info.has_condition:
 				partial_message = "%s 裡有條件判斷，但還沒有設定變數（Set Variable）。" % info.file_name
 

@@ -7,15 +7,15 @@
 script = ExtResource("1_step")
 title = "1. 建立角色"
 description = "在 my_story 資料夾建立一個角色，設定名字，加上至少 2 張立繪（例如開心、生氣）。"
-hint = "Godot 上方切到「Dialogic」→ 左邊清單上方的「New Character」圖示按鈕（滑鼠移上去會顯示名字），存到 my_story/characters。
-名字填在 Display Name。立繪用 Portraits 旁邊的「Import Images as Portraits」一次選好幾張圖片最快；用「Add Empty Portrait」新增的話，每張都要再選圖片。"
+hint = "Godot 上方切到「Dialogic」→ 左邊清單上方的「New Character」圖示按鈕（滑鼠移上去會顯示名字），存到 my_story/characters（沒有這個資料夾就在存檔視窗新增）。
+名字填在 Display Name。立繪用 Portraits 旁邊的「Import Images as Portraits」一次選好幾張 .png 或 .svg 圖片最快；用「Add Empty Portrait」新增的話，每張都要再選圖片。"
 
 [sub_resource type="Resource" id="Step_2"]
 script = ExtResource("1_step")
 title = "2. 建立時間軸"
 description = "在 my_story 資料夾建立一條時間軸，寫至少 3 句台詞。"
 hint = "左邊清單上方的「New Timeline」圖示按鈕，存到 my_story/timelines，檔名取 my_story（播放場景預設播這個檔名）。
-加入 Text 事件就是一句台詞，Character 欄位選角色就是那個角色說的話，空著就是旁白。
+加入 Text 事件就是一句台詞，事件最左邊的角色欄位選角色就是那個角色說的話，留在 (No one) 就是旁白。
 寫完記得按 Ctrl+S 存檔。"
 
 [sub_resource type="Resource" id="Step_3"]
@@ -23,34 +23,34 @@ script = ExtResource("1_step")
 title = "3. 角色登場、換表情"
 description = "讓角色登場，在故事中間換一次立繪（表情）。"
 hint = "加入 Character 事件，選 Join、選角色和立繪，角色就會出現在畫面上。
-換表情：再加一個 Character 事件選 Update 並選另一張立繪；或是在 Text 事件選角色時，順便選一張立繪。"
+換表情：再加一個 Character 事件選 Update，按角色旁邊的 Change Portrait 圖示，再選另一張立繪；或是在 Text 事件選角色時，順便選一張立繪。"
 
 [sub_resource type="Resource" id="Step_4"]
 script = ExtResource("1_step")
 title = "4. 加入選項"
 description = "讓玩家做一個選擇，至少有兩個選項，每個選項底下接不同的台詞。"
-hint = "加入 Choice 事件，填上選項文字，再加一個 Choice 事件緊接在它後面，兩個就是同一組。
-把台詞拖進選項底下（往右縮排一格），就是選了這個選項才會播的內容。"
+hint = "加入 Choice 事件，填上選項文字。剛加好的 Choice 是選取狀態，這時加入 Text 事件，台詞就會放進選項裡面（往右縮排一格）。
+按 End of choice 那一列的 Add Choice 新增第二個選項，兩個就是同一組。不要直接再按 Choice，它會跑到第一個選項裡面。"
 
 [sub_resource type="Resource" id="Step_5"]
 script = ExtResource("1_step")
 title = "5. 分支匯流"
 description = "兩個選項播完各自的內容後，都跳回同一個地方，繼續主線劇情。"
-hint = "在選項後面的主線開頭加一個 Label 事件，取個名字（例如「匯流」）。
-在每個選項的最後加一個 Jump 事件，選剛剛的 Label。"
+hint = "點最後一個 End of choice，加入 Label 事件，它就會放在所有選項後面，取個名字（例如「匯流」）。
+點每個選項裡的最後一句台詞，加入 Jump 事件，在 at 的下拉選單選剛剛的 Label。新事件會加在目前選取的事件後面，位置不對可以用拖的。"
 
 [sub_resource type="Resource" id="Step_6"]
 script = ExtResource("1_step")
 title = "6. 換背景"
 description = "幫故事加上背景圖片，讓玩家知道故事發生在哪裡。"
 hint = "加入 Background 事件，「with」選 Image，再選一張背景圖（可以先用 example/images 裡的教室）。
-想在故事中途換場景，就再加一個 Background 事件；Fade 填 1，就會用 1 秒慢慢換過去。"
+想在故事中途換場景，就再加一個 Background 事件；Fade time 填 1，就會用 1 秒慢慢換過去。"
 
 [sub_resource type="Resource" id="Step_7"]
 script = ExtResource("1_step")
 title = "7. 背景音樂"
 description = "幫故事加上背景音樂。"
-hint = "先把下載好的音樂檔放進 my_story/audio（推薦清單看教學文件）。
+hint = "先把下載好的音樂檔放進 my_story/audio（沒有這個資料夾就新增一個，推薦清單看教學文件）。
 加入 Audio 事件，「Play」選音樂檔，頻道（on … channel）選 music，音樂就會一直循環播放。
 頻道空著的話會當成音效，只播一次。想讓音樂停下來，再加一個 music 頻道的 Audio 事件，不選檔案就好。"
 
@@ -65,8 +65,8 @@ hint = "在上方選擇你的時間軸，按「試玩」。中途按「結束試
 script = ExtResource("1_step")
 title = "9. 額外：變數＋條件"
 description = "用變數記住玩家的選擇（例如好感度），最後依照變數走不同的結局。額外題不影響前 8 步。"
-hint = "先到 Dialogic 的 Variables 分頁新增一個變數（例如「好感度」，初始值 0）。
-在選項底下加 Set Variable 事件（例如 好感度 += 1），結尾加 Condition 事件（例如 好感度 >= 1），底下放好結局，再加一個 Else 放另一個結局。"
+hint = "模板已經有變數「好感度」可以直接用。自己新增的話，到 Dialogic 的 Variables 分頁按 Add Variable，再用 Change Type 改成 Int。
+選項裡加 Set Variable：好感度 → to itself plus → 1。結尾加 Condition：好感度 → >= → 右邊用 Change type 切成 Number → 1，裡面放好結局。再按 End of IF 的 Add Else，放另一個結局。"
 
 [sub_resource type="Resource" id="Step_10"]
 script = ExtResource("1_step")
@@ -80,7 +80,7 @@ hint = "在台詞裡加上 [pause=1]，播到這裡會停 1 秒，例如：我�
 script = ExtResource("1_step")
 title = "11. 額外：輸入名字"
 description = "讓玩家輸入自己的名字，角色在台詞裡叫出這個名字。"
-hint = "先到 Dialogic 的 Variables 分頁新增一個文字變數（例如「玩家名字」，初始值留空）。
+hint = "模板已經有文字變數「玩家名字」可以直接用。自己新增的話，到 Dialogic 的 Variables 分頁按 Add Variable（新變數預設就是文字）。
 加入 Text Input 事件，選這個變數，Text 填要問的問題（例如「你叫什麼名字？」）。
 在台詞裡寫 {玩家名字}，播放時就會換成玩家輸入的名字。"
 

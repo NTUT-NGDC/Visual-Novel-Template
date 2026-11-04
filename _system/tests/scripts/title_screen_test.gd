@@ -5,6 +5,7 @@ extends Node
 ## 3. 音量：調整後會存檔，重新讀取後音量和滑桿位置都對；拉到 0 是靜音
 ## 4. 預設設定（範例故事）：標題 → 按開始 → 範例故事播完 → 回到標題，跑兩輪，第二輪變數有重設
 ## 5. 暫停選單：打開時 Dialogic 暫停、故事不會往下走；繼續後恢復；回到標題時時間軸已停止
+## 6. 故事場景：會播檢查器選的時間軸；找不到時間軸時不播放、不會當掉
 ##
 ## 測試會暫時改掉 user://sound_settings.cfg，結束時還原。
 ##
@@ -39,6 +40,7 @@ func _ready() -> void:
 	await _test_sound_settings()
 	await _test_full_flow()
 	await _test_pause_menu()
+	await _test_story_scene_timeline()
 
 	if _failures == 0:
 		print("[標題畫面測試] 全部 PASS")
@@ -193,6 +195,31 @@ func _test_pause_menu() -> void:
 	await get_tree().create_timer(0.3).timeout
 	_expect(Dialogic.current_timeline == null, "時間軸已經停止")
 	_expect(not Dialogic.paused, "已經解除暫停")
+
+
+## 社員複製範例場景後，只改檢查器的 Timeline Path 就能播自己的時間軸
+func _test_story_scene_timeline() -> void:
+	print("--- 故事場景的 Timeline Path ---")
+	var story_packed: PackedScene = load(STORY_PATH)
+
+	var missing_story: Node = story_packed.instantiate()
+	missing_story.set("timeline_path", "res://my_story/不存在的時間軸.dtl")
+	add_child(missing_story)
+	await get_tree().create_timer(0.2).timeout
+	_expect(Dialogic.current_timeline == null, "找不到時間軸時不播放")
+	missing_story.queue_free()
+	await get_tree().process_frame
+
+	const OTHER_TIMELINE: String = "res://_system/tests/timelines/test_timeline.dtl"
+	var story: Node = story_packed.instantiate()
+	story.set("timeline_path", OTHER_TIMELINE)
+	add_child(story)
+	_expect(await _wait_until(func() -> bool: return Dialogic.current_timeline != null), "有開始播放")
+	_expect(Dialogic.current_timeline != null and Dialogic.current_timeline.resource_path == OTHER_TIMELINE, "播的是檢查器選的時間軸")
+	# 先移除場景再停止時間軸，避免 _on_timeline_ended 換回標題畫面
+	story.queue_free()
+	await get_tree().process_frame
+	await Dialogic.end_timeline(true)
 
 
 ## 用真正的換場景流程跑：把標題畫面設成目前的場景，這個測試節點留在旁邊不會被換掉
